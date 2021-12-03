@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+###############################################################################
+#
+#    Copyright (C) 2019-TODAY OPeru.
+#    Author      :  Grupo Odoo S.A.C. (<http://www.operu.pe>)
+#
+#    This program is copyright property of the author mentioned above.
+#    You can`t redistribute it and/or modify it.
+#
+###############################################################################
+
+import requests
+import base64
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.wizard.mail_compose_message import _reopen
 from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
-
-import requests
-import base64
 
 class AccountInvoiceSend(models.TransientModel):
     _inherit = 'account.invoice.send'
@@ -25,10 +33,10 @@ class AccountInvoiceSend(models.TransientModel):
                     attachment_ids = []
                     data_attach = {
                         'name': invoice_id.name + '.xml',
-                        'datas': base64.encodestring(data_content),
+                        'datas': base64.encodebytes(data_content),
                         'res_model': 'mail.compose.message',
-                        # 'res_id': 0,
+                        'res_id': 0,
                         'type': 'binary',  # override default_type from context, possibly meant for another model!
                     }
                     attachment_ids.append(Attachment.create(data_attach).id)
-                    wizard.composer_id.write({'attachment_ids': [(6, 0, wizard.composer_id.attachment_ids.ids + attachment_ids)]})
+                    wizard.write({'attachment_ids': [(6, 0, wizard.composer_id.attachment_ids.ids + attachment_ids)]})

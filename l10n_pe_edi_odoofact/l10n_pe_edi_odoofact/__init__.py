@@ -41,6 +41,7 @@ def _create_journal_debit(env):
                     'l10n_pe_edi_is_einvoice': True, 
                     'l10n_latam_document_type_id': env.ref('l10n_pe_edi_odoofact.document_type01').id,
                     'l10n_pe_edi_shop_id': journal.company_id.l10n_pe_edi_shop_ids and journal.company_id.l10n_pe_edi_shop_ids[0].id or False,
+                    'sequence_override_regex': r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$',
                     })
     # Create journal for Debit note
     company_with_debit_note_journal = env['account.journal'].search([('l10n_latam_document_type_id','=',env.ref('l10n_pe_edi_odoofact.document_type08').id)]).mapped('company_id')
@@ -53,13 +54,25 @@ def _create_journal_debit(env):
                         'l10n_pe_edi_is_einvoice': True, 
                         'l10n_latam_document_type_id': env.ref('l10n_pe_edi_odoofact.document_type08').id,
                         'l10n_pe_edi_shop_id': company.l10n_pe_edi_shop_ids and company.l10n_pe_edi_shop_ids[0].id or False,
+                        'sequence_override_regex': r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$',
                         'sequence': 6,
                         'company_id': company.id,
                         'show_on_dashboard': True,                        
                         'color': 11,
+                    })
+        
+def _write_journal_regex(env):
+    """ This hook is used to add a sequence on existing journal
+    when module l10n_pe_edi_odoofact is installed. '^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    """
+    company_ids = env['res.company'].search([]).filtered(lambda r: r.country_id.code == 'PE')
+    for journal in env['account.journal'].search([('company_id','in',company_ids.ids),('type','=','sale')]):
+        journal.write({
+                    'sequence_override_regex': r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$',
                     })
 
 def _l10n_pe_edi_odoofact_init(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     _create_shop(env)
     _create_journal_debit(env)
+    _write_journal_regex(env)

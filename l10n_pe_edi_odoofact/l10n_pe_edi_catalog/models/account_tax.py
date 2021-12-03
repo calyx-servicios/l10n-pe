@@ -9,19 +9,14 @@
 #
 ###############################################################################
 
-from . import catalog
-from . import l10n_pe_edi_dues
-from . import sale_order
-from . import account
-from . import account_move
-from . import account_tax
-from . import chart_template
-from . import edi_request
-from . import edi_shop
-from . import product_template
-from . import res_config_settings
-from . import res_company
-from . import l10n_pe_edi_picking_number
-from . import uom_uom
+from odoo import fields, models
 
-# eof:__init__.py
+class AccountTax(models.Model):
+    _inherit = 'account.tax'
+
+    l10n_pe_edi_tax_code = fields.Selection(selection_add=[('3000', 'IR - Rent Tax')])
+
+class AccountTaxTemplate(models.Model):
+    _inherit = 'account.tax.template'
+
+    l10n_pe_edi_tax_code = fields.Selection(selection_add=[('3000', 'IR - Rent Tax')])

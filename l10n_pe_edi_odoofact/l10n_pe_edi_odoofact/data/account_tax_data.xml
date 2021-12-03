@@ -49,7 +49,7 @@
         <field name="name">10% ISC</field>
         <field name="description">ISC</field>
         <field name="l10n_pe_edi_tax_code">2000</field>
-        <field name="l10n_pe_edi_isc_type" ref="l10n_pe_edi_odoofact.l10n_pe_edi_cat08_01"/>
+        <field name="l10n_pe_edi_isc_type" ref="l10n_pe_edi_catalog.l10n_pe_edi_cat08_01"/>
         <field name="l10n_pe_edi_unece_category">S</field>
         <field name="amount">10.0</field>
         <field name="type_tax_use">sale</field>

@@ -12,7 +12,7 @@
                         <group string="Send your electronic invoices by PSE / OSE">
                             <field name="l10n_pe_edi_send_invoice" widget="boolean_toggle"/>    
                             <field name="l10n_pe_edi_ose_id" options="{'no_create':True}"/>
-                            <field name="l10n_pe_edi_ose_code"/>        
+                            <field name="l10n_pe_edi_ose_code" invisible="True"/>        
                             <field name="l10n_pe_edi_ose_url"/>
                             <field name="l10n_pe_edi_ose_token"/>            
                         </group>

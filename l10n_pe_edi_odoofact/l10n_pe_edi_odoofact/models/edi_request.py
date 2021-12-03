@@ -19,10 +19,11 @@ from odoo.exceptions import UserError, RedirectWarning
 class EdiRequest(models.Model):
     _name = 'l10n_pe_edi.request'
     _description = 'EDI PE Request'
+    _check_company_auto = True
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Description', size=128, index=True, required=True, default='New')
-    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company)
     document_date = fields.Date(string='Document date')    
     document_number = fields.Char(string='Document number')
     l10n_pe_edi_multishop = fields.Boolean('Multi-Shop', related='company_id.l10n_pe_edi_multishop')   
@@ -32,17 +33,17 @@ class EdiRequest(models.Model):
     link_xml = fields.Char('XML link', compute='compute_request_data', store=True)
     log_ids = fields.One2many('l10n_pe_edi.request.log','request_id', string='EDI log', copy=False)
     model = fields.Char(string='Model Name')
-    ose_accepted = fields.Boolean('Sent to PSE/OSE', compute='compute_request_data', store=True, track_visibility='onchange')  
+    ose_accepted = fields.Boolean('Sent to PSE/OSE', compute='compute_request_data', store=True, tracking=True)  
     res_id = fields.Integer(string='Record ID', help="ID of the target record in the database")
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)     
-    response = fields.Text('Response', compute='compute_request_data', store=True, track_visibility='onchange')   
+    response = fields.Text('Response', compute='compute_request_data', store=True, tracking=True)   
     type = fields.Selection([('invoice','Invoice')], string='Document ype')
-    sunat_accepted = fields.Boolean('Accepted by SUNAT', compute='compute_request_data', store=True, track_visibility='onchange')       
+    sunat_accepted = fields.Boolean('Accepted by SUNAT', compute='compute_request_data', store=True, tracking=True)       
     state = fields.Selection(
         string='State',
         selection=[('draft', 'New'), ('sent', 'Sent to PSE/OSE'),('accepted','Accepted by SUNAT')], 
         default='draft',
-        track_visibility='always',
+        tracking=True,
         compute='_compute_state',
         store=True
     )        
@@ -111,7 +112,7 @@ class EdiRequest(models.Model):
     def _get_ose_supplier(self):
         if not self.company_id.vat or not self.company_id.l10n_pe_edi_ose_id:
             action = self.env.ref('base.action_res_company_form')
-            msg = _('Can not send the electronic document until you configure your company name, VAT and the PSE/OSE supplier.')
+            msg = _('Can not send the electronic document until you configure your company name, VAT and the PSE/OSE supplier. Company: %s')% (self.company_id.name)
             raise RedirectWarning(msg, action.id, _('Go to Companies'))
         return self.company_id.l10n_pe_edi_ose_id.code
     
@@ -229,7 +230,7 @@ class EdiRequest(models.Model):
                     'created': len(resume_request_ids),
                     'sent': len(resume_request_ids.filtered(lambda r: r.ose_accepted == True)),
                     'accepted': len(resume_request_ids.filtered(lambda r: r.sunat_accepted == True)),
-                    'version': '13.0'}
+                    'version': '14.0'}
                 if company.l10n_pe_edi_ose_id and company.l10n_pe_edi_ose_id.resume_url:   
                     url = company.l10n_pe_edi_ose_id.resume_url
                     try:
@@ -285,4 +286,4 @@ class L10nPeEdiSupplier(models.Model):
     name = fields.Char(string='Name', size=128, index=True, required=True)
     control_url = fields.Char(string='URL for searching electronic documents')
     resume_url = fields.Char(string='URL for resume documents')
-    authorization_message = fields.Html(string='Authorization Message', help="The message will be printed on the invoice", translate=True)
+    authorization_message = fields.Html(string='Authorization Message', help="The message will be printed on the invoice", translate=True, sanitize=False)

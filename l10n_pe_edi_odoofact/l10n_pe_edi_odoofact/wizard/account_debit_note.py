@@ -16,14 +16,14 @@ class AccountDebitNote(models.TransientModel):
     _inherit = 'account.debit.note'
 
     def _get_type_debit_note(self):
-        return self.env.ref('l10n_pe_edi_odoofact.l10n_pe_edi_cat10_02').id
+        return self.env.ref('l10n_pe_edi_catalog.l10n_pe_edi_cat10_02').id
     
     l10n_pe_edi_debit_type_id = fields.Many2one('l10n_pe_edi.catalog.10', string='Debit note type', help='Catalog 10: Type of Debit note', default=_get_type_debit_note)
 
     @api.model
     def default_get(self, fields):
         res = super(AccountDebitNote, self).default_get(fields)
-        debit_journal = self.env['account.journal'].search([('l10n_latam_document_type_id','=',self.env.ref('l10n_pe_edi_odoofact.document_type08').id)])
+        debit_journal = self.env['account.journal'].search([('l10n_latam_document_type_id','=',self.env.ref('l10n_pe_edi_odoofact.document_type08').id)],limit=1)
         if debit_journal:
             res['journal_id'] = debit_journal.id
         return res

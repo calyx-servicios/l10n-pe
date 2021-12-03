@@ -10,7 +10,7 @@
 ###############################################################################
 
 {
-    'name' : 'Factura electronica - Catalogos SUNAT',
+    'name' : 'Catalogos SUNAT',
     'version' : '1.0.1',
     'author' : 'OPeru',
     'category' : 'Accounting & Finance',
@@ -29,11 +29,17 @@ Tablas:
 
     """,
     'website': 'http://www.operu.pe/contabilidad',
-    'depends' : ['base',
-                 'account'],
-    'data': ['views/catalog_views.xml',
-             'security/ir.model.access.csv',   
-            ],
+    'depends' : [
+        'base',
+        'account',
+        'l10n_pe',
+    ],
+    'data': [
+        'data/identification_type_data.xml',
+        'data/catalog_data.xml',
+        'views/catalog_views.xml',
+        'security/ir.model.access.csv',   
+    ],
     'qweb' : [
     ],
     'demo': [
@@ -51,3 +57,5 @@ Tablas:
     "post_init_hook": "l10n_pe_edi_catalog_init",
     'uninstall_hook': 'l10n_pe_edi_catalog_unistall',
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

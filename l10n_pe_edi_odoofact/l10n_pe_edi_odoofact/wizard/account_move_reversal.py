@@ -12,14 +12,13 @@
 from odoo import models, fields, api
 from odoo.tools.translate import _
 
-
 class AccountMoveReversal(models.TransientModel):
     """Credit Notes"""
 
     _inherit = "account.move.reversal"
     
     def _get_type_credit_note(self):
-        return self.env.ref('l10n_pe_edi_odoofact.l10n_pe_edi_cat09_01').id
+        return self.env.ref('l10n_pe_edi_catalog.l10n_pe_edi_cat09_01').id
 
     l10n_pe_edi_reversal_type_id = fields.Many2one(
         'l10n_pe_edi.catalog.09', string='Credit note type', help='Catalog 09: Type of Credit note', default=_get_type_credit_note)

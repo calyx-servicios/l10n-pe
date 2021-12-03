@@ -9,6 +9,7 @@
 #
 ###############################################################################
 
+from . import sale_make_invoice_advance
 from . import account_debit_note
 from . import account_invoice_send
 from . import account_move_reversal

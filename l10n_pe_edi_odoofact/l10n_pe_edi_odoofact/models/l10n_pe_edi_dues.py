@@ -9,19 +9,14 @@
 #
 ###############################################################################
 
-from . import catalog
-from . import l10n_pe_edi_dues
-from . import sale_order
-from . import account
-from . import account_move
-from . import account_tax
-from . import chart_template
-from . import edi_request
-from . import edi_shop
-from . import product_template
-from . import res_config_settings
-from . import res_company
-from . import l10n_pe_edi_picking_number
-from . import uom_uom
+from odoo import models, fields, api, _
 
-# eof:__init__.py
+class EdiDues(models.Model):
+    _name = 'l10n_pe_edi.dues'
+    _description = 'Dues'
+    _order = 'dues_number'
+
+    move_id = fields.Many2one('account.move', string="Move", required=True, readonly=True, ondelete="cascade")
+    dues_number = fields.Integer(string="Dues Number")
+    paid_date = fields.Date(string="Paid Date")
+    amount = fields.Float(string="Amount")

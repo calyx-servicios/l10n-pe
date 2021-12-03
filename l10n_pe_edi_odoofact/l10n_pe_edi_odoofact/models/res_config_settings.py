@@ -26,6 +26,7 @@ class ResConfigSettings(models.TransientModel):
     l10n_pe_edi_send_invoice = fields.Boolean('Send Invoices to PSE/OSE', related='company_id.l10n_pe_edi_send_invoice', readonly=False)
     l10n_pe_edi_send_invoice_interval_unit = fields.Selection(related="company_id.l10n_pe_edi_send_invoice_interval_unit", readonly=False)
     l10n_pe_edi_send_invoice_next_execution_date = fields.Datetime(related="company_id.l10n_pe_edi_send_invoice_next_execution_date", readonly=False)
+    deposit_default_product_id = fields.Many2one(domain="[('type', '=', 'service'),('l10n_pe_edi_is_for_advance','=',True)]")
 
     @api.onchange('l10n_pe_edi_send_invoice_interval_unit')
     def onchange_l10n_pe_edi_send_invoice_interval_unit(self):

@@ -33,14 +33,14 @@ class ResCompany(models.Model):
     l10n_pe_edi_send_invoice_interval_unit = fields.Selection([
         ('hourly', 'Hourly'),
         ('daily', 'Daily')],
-        default='daily', string='Interval Unit')
+        default='daily', string='Interval Unit for sending')
     l10n_pe_edi_send_invoice_next_execution_date = fields.Datetime(string="Next Execution")
 
-
+    @api.model
     def run_send_invoice(self):
         """ This method is called from a cron job to send the invoices to PSE/OSE.
         """
-        records = self.search([('l10n_pe_edi_send_invoice_next_execution_date', '>=', fields.Datetime.now())])
+        records = self.search([('l10n_pe_edi_send_invoice_next_execution_date', '<=', fields.Datetime.now())])
         if records:
             to_update = self.env['res.company']
             for record in records:
@@ -64,7 +64,7 @@ class ResCompany(models.Model):
                 ('l10n_pe_edi_is_einvoice','=',True),
                 ('state','not in',['draft','cancel']),
                 ('l10n_pe_edi_ose_accepted','=',False),
-                ('type','in',['out_invoice','out_refund']),
+                ('move_type','in',['out_invoice','out_refund']),
                 ('company_id','=', company.id),
                 ('l10n_pe_edi_cron_count','>',1)]).sorted('invoice_date')
             # l10n_pe_edi_cron_count starts in 5

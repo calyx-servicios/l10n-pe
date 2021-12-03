@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+###############################################################################
+#
+#    Copyright (C) 2019-TODAY OPeru.
+#    Author      :  Grupo Odoo S.A.C. (<http://www.operu.pe>)
+#
+#    This program is copyright property of the author mentioned above.
+#    You can`t redistribute it and/or modify it.
+#
+###############################################################################
+
 from odoo.tests.common import TransactionCase, tagged
 
 @tagged('-at_install', 'post_install')
@@ -24,3 +35,7 @@ class TestEinvoiceCreate(TransactionCase):
             'l10n_pe_edi_operation_type': "1",
             'l10n_latam_document_type_id': self.invoice_document_type.id,
         })
+        
+    # def test_button_available(self):
+    #     """Make available button"""
+    #     print("#########", self.company.l10n_pe_edi_ose_id.code)

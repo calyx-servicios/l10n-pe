@@ -13,7 +13,7 @@ from odoo import models, fields, api, _
 
 class EdiPickingNumber(models.Model):
     _name = 'l10n_pe_edi.picking.number'
-    _description = "EDI Picking Number"
+    _description = 'Picking numbers'
 
     invoice_id = fields.Many2one('account.move', string="Invoice")
     name = fields.Char(string="Picking Serial and Number", help="Sintaxt serial TXXX-XXXX or 0XXX-XXXX")

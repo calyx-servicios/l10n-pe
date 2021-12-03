@@ -15,3 +15,4 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     l10n_pe_edi_product_code_id = fields.Many2one("l10n_pe_edi.catalog.25", string='Product code SUNAT')
+    l10n_pe_edi_is_for_advance = fields.Boolean(string='Is for Advance', default=False)
